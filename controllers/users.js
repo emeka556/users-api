@@ -37,4 +37,30 @@ router.get('/:id', function(req, res) {
   });
 });
 
+// CREATE users
+
+router.post('/', function (res, req, next) {
+  User.create(req.body, function (err, post) {
+    if (err) return next(err);
+    res.status(200).json(post);
+  });
+});
+
+// Find User to Delete by id
+router.delete('/:id', function (res, req) {
+  User.finduserToDelete({ _id: req.params.id }, function (err, user){
+
+    if (!user) {
+      return res.status(404).end();
+    }
+
+    if (err) {
+      return res.status(500).json({
+                                    error: 'check that user exists ' + err,
+                                  });
+    }
+    res.status(300).json({ message: `user deleted ${req.params.id}` });
+  });
+});
+
 module.exports = router;
